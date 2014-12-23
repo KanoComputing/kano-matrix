@@ -26,6 +26,9 @@ var Judoka = function (canvas, context, fontSize) {
         "            .DKKKKKKKKKKKKD             "
     ];
 
+    /* The mask contains a flag for each line that determines whether
+       it should be displayed or not. These flags are randomly changed
+       as the face is drawn so it appears to be flickering. */
     this.mask = [];
 
     this.canvas = canvas;
@@ -36,20 +39,26 @@ var Judoka = function (canvas, context, fontSize) {
     this.width = this.ctx.measureText(this.ascii[0]).width;
     this.height = this.ascii.length * fontSize;
 
+    /* Center the face on the screen */
     this.x = (canvas.width - this.width) / 2;
     this.y = (canvas.height - this.height) / 2;
 
-    this.prep_ascii = [];
+    /*
+     * Preproces the text to see where should the background be drawn.
+     * We don't want to draw background of any spaces at the beginning
+     * or end of the line.
+     */
+    this.backgroundDimensions = [];
     for (var l = 0; l < this.ascii.length; l++) {
-        var startSpace = this.ascii[l].match(/^\s*/)[0];
-        var offset = this.ctx.measureText(startSpace).width;
-        var cleanStr = this.ascii[l].replace(/^\s*/g,'').replace(/\s*$/g,'');
-        var cleanWidth = this.ctx.measureText(cleanStr).width;
+        var startSpace = this.ascii[l].match(/^\s*/)[0],
+            offset = this.ctx.measureText(startSpace).width,
+            cleanStr = this.ascii[l].replace(/^\s*/g,'').replace(/\s*$/g,''),
+            cleanWidth = this.ctx.measureText(cleanStr).width;
 
-        this.prep_ascii.push({
-            offset: offset,
-            s: cleanStr,
-            w: cleanWidth
+        this.backgroundDimensions.push({
+            offset: offset, /* where the background starts relative to the
+                               start of the image [pixels] */
+            width: cleanWidth /* how big is the background [pixels] */
         });
     }
 };
@@ -61,16 +70,18 @@ Judoka.prototype.uncoverRandomLine = function () {
 Judoka.prototype.draw = function () {
     for (var l = 0; l < this.ascii.length; l++) {
         if (this.mask[l] !== true)
-            continue;
+            continue; /* This line hasn't been uncovered yet, skip it. */
 
+        /* Draw the background behind the line */
         this.ctx.beginPath();
         this.ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
-        this.ctx.rect(this.x + this.prep_ascii[l].offset,
+        this.ctx.rect(this.x + this.backgroundDimensions[l].offset,
                       this.y + (l - 1)*this.fontSize,
-                      this.prep_ascii[l].w,
+                      this.backgroundDimensions[l].width,
                       this.fontSize);
         this.ctx.fill();
 
+        /* Draw the line of text */
         this.ctx.beginPath();
         this.ctx.fillStyle = "rgba(255, 255, 255, 1.0)";
         this.ctx.fillText(this.ascii[l], this.x, this.y + l*this.fontSize);

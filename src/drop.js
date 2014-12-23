@@ -9,10 +9,12 @@ var Drop = function (x, canvas, ctx, fontSize) {
     this.fontSize = fontSize;
 
     this.x = x;
-    this.y = Math.floor(Math.random()*(canvas.height/fontSize));
+
+    /* Random starting Y position */
+    this.y = Math.floor(Math.random() * (canvas.height / fontSize));
 
     this.last_char = this.getRandomChar();
-    this.speed = Math.floor(Math.random()*3) + 1; /* cycles per move */
+    this.speed = this.getRandomSpeed();
 
     this.cycle = 0;
 };
@@ -22,30 +24,45 @@ Drop.prototype.getRandomChar = function () {
 };
 
 Drop.prototype.getRandomSpeed = function () {
-    if (Math.random() > 0.80)
+    if (Math.random() > 0.75)
         return 'slow';
 
     return 'normal';
 };
 
 Drop.prototype.update = function () {
+    var x_px, y_px;
+
     this.cycle = ++this.cycle % 2;
-    if (this.speed === 'slow' && this.cycle == 1)
+
+    /* Slow threads should skip cycles */
+    if (this.speed === 'slow' && this.cycle != 0)
         return;
 
-    /* Make the previous character orange*/
+    /* The latest character is always drawn white, we need to make it orange. */
+    x_px = this.x * this.fontSize;
+    y_px = (this.y - 1) * this.fontSize;
+
+    /* Cover it with black first */
     this.ctx.fillStyle = "#000";
-    this.ctx.fillText(this.last_char, this.x*this.fontSize, (this.y - 1)*this.fontSize);
+    this.ctx.fillText(this.last_char, x_px, y_px);
 
+    /* Redraw it orange */
     this.ctx.fillStyle = "#eb722b";
-    this.ctx.fillText(this.last_char, this.x*this.fontSize, (this.y - 1)*this.fontSize);
+    this.ctx.fillText(this.last_char, x_px, y_px);
 
+
+    /* Draw a new white character */
     this.last_char = this.getRandomChar();
 
-    this.ctx.fillStyle = "#eee";
-    this.ctx.fillText(this.last_char, this.x*this.fontSize, this.y*this.fontSize);
+    /* x_px stays the same */
+    y_px = this.y * this.fontSize;
 
-    if(this.y*this.fontSize > this.canvas.height && Math.random() > 0.975) {
+    this.ctx.fillStyle = "#eee";
+    this.ctx.fillText(this.last_char, x_px, y_px);
+
+    /* When the drop is off the screen return it back to the top at an random moment. */
+    if (y_px > this.canvas.height && Math.random() > 0.925) {
         this.y = 0;
         this.speed = this.getRandomSpeed();
     }

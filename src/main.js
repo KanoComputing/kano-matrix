@@ -18,10 +18,12 @@ function matrix() {
     ctx = canvas.getContext("2d");
     ctx.font = fontSize + "px courier new";
 
+    /* Initialise the drops */
     numberOfDrops = canvas.width / fontSize;
     for(var x = 0; x < numberOfDrops; x++)
         drops.push(new Drop(x, canvas, ctx, fontSize));
 
+    /* Initialise the judoka */
     judoka = new Judoka(canvas, ctx, fontSize);
 
     setInterval(function () {
