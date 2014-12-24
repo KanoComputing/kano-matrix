@@ -40,7 +40,11 @@ var Judoka = function (canvas, context, fontSize) {
     this.height = this.ascii.length * fontSize;
 
     /* Center the face on the screen */
-    this.x = (canvas.width - this.width) / 2;
+    if (window.innerWidth > 1140) {
+        this.x = ((canvas.width - this.width) / 2) - 330;
+    } else {
+        this.x = ((canvas.width - this.width) / 2) * 0.4210526316;
+    }
     this.y = (canvas.height - this.height) / 2;
 
     /*
@@ -52,11 +56,12 @@ var Judoka = function (canvas, context, fontSize) {
     for (var l = 0; l < this.ascii.length; l++) {
         var startSpace = this.ascii[l].match(/^\s*/)[0],
             offset = this.ctx.measureText(startSpace).width,
-            cleanStr = this.ascii[l].replace(/^\s*/g,'').replace(/\s*$/g,''),
+            cleanStr = this.ascii[l].replace(/^\s*/g, '').replace(/\s*$/g, ''),
             cleanWidth = this.ctx.measureText(cleanStr).width;
 
         this.backgroundDimensions.push({
-            offset: offset, /* where the background starts relative to the
+            offset: offset,
+            /* where the background starts relative to the
                                start of the image [pixels] */
             width: cleanWidth /* how big is the background [pixels] */
         });
@@ -64,7 +69,7 @@ var Judoka = function (canvas, context, fontSize) {
 };
 
 Judoka.prototype.uncoverRandomLine = function () {
-    this.mask[Math.floor(Math.random()*this.ascii.length)] = true;
+    this.mask[Math.floor(Math.random() * this.ascii.length)] = true;
 };
 
 Judoka.prototype.draw = function () {
@@ -76,14 +81,14 @@ Judoka.prototype.draw = function () {
         this.ctx.beginPath();
         this.ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
         this.ctx.rect(this.x + this.backgroundDimensions[l].offset,
-                      this.y + (l - 1)*this.fontSize,
-                      this.backgroundDimensions[l].width,
-                      this.fontSize);
+            this.y + (l - 1) * this.fontSize,
+            this.backgroundDimensions[l].width,
+            this.fontSize);
         this.ctx.fill();
 
         /* Draw the line of text */
         this.ctx.beginPath();
         this.ctx.fillStyle = "rgba(255, 255, 255, 1.0)";
-        this.ctx.fillText(this.ascii[l], this.x, this.y + l*this.fontSize);
+        this.ctx.fillText(this.ascii[l], this.x, this.y + l * this.fontSize);
     }
 };

@@ -6,21 +6,29 @@ function darkenCanvas(canvas, context, ratio) {
 function matrix() {
     var canvas = document.getElementById("canvas"),
         ctx,
-        fontSize = 12,
-        elapsed = 0, /* seconds */
-        dt = 53, /* miliseconds */
+        fontSize,
+        elapsed = 0,
+        /* seconds */
+        dt = 53,
+        /* miliseconds */
         numberOfDrops,
         drops = [],
-        judoka;
+        judoka,
+        maxWidth = 1140,
+        minWidth = 600;
+
+    // Proportionally scale font size when window is less than maxWidth wide
+    fontSize = window.innerWidth > maxWidth || window.innerWidth < minWidth ? 12 : (window.innerWidth / 1140) * 12;
 
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
     ctx = canvas.getContext("2d");
     ctx.font = fontSize + "px courier new";
 
+
     /* Initialise the drops */
     numberOfDrops = canvas.width / fontSize;
-    for(var x = 0; x < numberOfDrops; x++)
+    for (var x = 0; x < numberOfDrops; x++)
         drops.push(new Drop(x, canvas, ctx, fontSize));
 
     /* Initialise the judoka */
@@ -34,11 +42,14 @@ function matrix() {
         for (var i = 0; i < drops.length; i++)
             drops[i].update();
 
-        elapsed += dt / 1000;
-        /* Show the Judoka face 5 seconds in the animation */
-        if (elapsed > 5) {
-            judoka.uncoverRandomLine();
-            judoka.draw();
+        /* Only show Judoka if window is > 500px */
+        if (window.innerWidth > 600) {
+            /* Show the Judoka face 5 seconds in the animation */
+            elapsed += dt / 1000;
+            if (elapsed > 1) {
+                judoka.uncoverRandomLine();
+                judoka.draw();
+            }
         }
     }, dt);
 };
