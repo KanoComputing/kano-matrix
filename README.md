@@ -17,4 +17,4 @@ Just open the `index.html` file in your preferred browser.
  * `src/judoka.js` - the `Judoka` object for drawing the face
 
 ## Download
-Screensaver for OS X: [download link](http://kano.me/kano-matrix-osx-screensaver.zip "Matrix Screensaver")
+Screensaver for OS X: [download link](http://dl.kano.me/kano-matrix-osx-screensaver.zip "Matrix Screensaver")
