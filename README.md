@@ -15,3 +15,6 @@ Just open the `index.html` file in your preferred browser.
  * `src/main.js` - contains the main `matrix()` function
  * `src/drop.js` - the `Drop` object that handles rendering of each drop
  * `src/judoka.js` - the `Judoka` object for drawing the face
+
+## Download
+Screensaver for OS X: [download link](http://kano.me/kano-matrix-osx-screensaver.zip "Matrix Screensaver")
