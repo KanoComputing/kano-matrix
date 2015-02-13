@@ -1,7 +1,7 @@
 var Drop = function (x, canvas, ctx, fontSize) {
     /* A pool of characters that are used for the threads */
     var charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" +
-                  "畀畁畂畃畄畅畆畇畈畉畊畋界畍畎畏畐畑";
+                  "甲乙丙丁戊己庚辛壬癸子丑寅卯辰巳午未申酉戌亥";
     this.charset = charset.split("");
 
     this.canvas = canvas;
