@@ -1,7 +1,9 @@
 kano-matrix
 ===========
 
-The Kano boot sequence animation on the web using HTML5 canvas.
+The Kano boot sequence animation on the web using HTML5 canvas. Click here for [live demo](http://developers.kano.me/matrix.html).
+
+![](http://developers.kano.me/images/beta131/html-matrix.png)
 
 
 ## Usage
